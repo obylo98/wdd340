@@ -14,3 +14,9 @@ node_modules
 
 # .DS_Store is only for Mac users
 **/.DS_Store
+
+# README.md is a markdown file that is used to read the documentation of the project
+README.md
+
+# pnmp-lock.yaml is a file that is used to store the dependencies of the project in the pnpm package manager
+pnpm-lock.yaml
