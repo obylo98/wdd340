@@ -1,5 +1,7 @@
-<% const d = new Date()
-let year = d.getFullYear() %>
-<footer>
-  <p class="copyright">&copy; <%= year %> WDD 340 App</p>
-</footer>
+<% const d = new Date(); let year = d.getFullYear(); %>
+<% if (title) { %>
+  <footer>
+    <p class="copyright">&copy; <%= year %> WDD 340 App</p>
+    <a href="/ierror">Error Link</a>
+  </footer>
+<% } %>
