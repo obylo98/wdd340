@@ -6,6 +6,7 @@
  * Require Statements
  *************************/
 const express = require("express");
+const session = require("express-session");
 const expressLayouts = require("express-ejs-layouts");
 const env = require("dotenv").config();
 const app = express();
@@ -14,13 +15,29 @@ const baseController = require("./controllers/baseController");
 const inventoryRoute = require("./routes/inventoryRoute");
 const intentionalErrorRoute = require("./routes/intentionalErrorRoute.js");
 const utilities = require("./utilities");
+const pool = require("./database");
 
 /* ***********************
  * View Engine and Templates
  *************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.set("layout", "./layouts/layout"); // not at views root
+app.use(
+  session({
+    store: new (require("connect-pg-simple")(session))({
+      createTableIfMissing: true,
+      pool,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+  })
+);
+app.use(require("connect-flash")());
 /* ***********************
  * Routes
  *************************/
@@ -48,7 +65,6 @@ app.get("/", baseController.buildHome);
 // app.get("/", function(req, res) {
 //   res.render("index", { title: "Home" })
 // })
-
 
 /* ***********************
  * 404 Catch-All Route (Handles Unknown Routes)
@@ -82,5 +98,3 @@ app.use(async (err, req, res, next) => {
     nav,
   });
 });
-
-

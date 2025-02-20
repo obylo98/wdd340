@@ -1,0 +1,12 @@
+<h1><%- title %></h1>
+<% if (messages && messages.notice) { %>
+    <div class="notice"><%= messages.notice %></div>
+  <% } %>
+
+<form class="input-box" action="/inv/add-classification" method="post"> <%# The form must send all data... %>
+    <label>CLASSIFICATION NAME<input type="text" name="classification_name" required value="<%= locals.classification_name %>" pattern="[0-9a-zA-Z]+"></label>
+    <span class="fine-print">Required. Cannot contain spaces or special characters.</span>
+    <input type="submit" value="ADD">
+
+</form>
+

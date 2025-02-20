@@ -44,7 +44,53 @@
   text-decoration: none;
   color: black;
 }
+/* Login form  */
+.input-box {
+  background-color: var(--secondary-bg);
+  color: var(--secondary-fg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: .5rem;
+  box-shadow: 0 .2rem .5rem rgba(0, 0, 0, 0.298);
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 500px;
+  align-self: center;
+}
+.input-box label {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  position: relative;
+}
 
+.fine-print {
+  font-size: .75em;
+}
+
+.remove-bullet {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.remove-bullet a {
+  text-decoration: none;
+  color: black;
+}
+
+.notice {
+  color: rgb(255, 136, 128);
+  list-style: none;
+  background-color: rgb(15, 16, 16);
+  padding: .5rem;
+  border-radius: 3px;
+}
+.notice li::before {
+  content: "> ";
+}
 /* Navigation */
 nav {
   background-color: rgb(3, 4, 94);
