@@ -11,6 +11,9 @@ const expressLayouts = require("express-ejs-layouts");
 const env = require("dotenv").config();
 const app = express();
 const static = require("./routes/static");
+const cookieParser = require("cookie-parser");
+const accountRoute = require("./routes/accountRoute");
+const messageRoute = require("./routes/messageRoute");
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require("./routes/inventoryRoute");
 const intentionalErrorRoute = require("./routes/intentionalErrorRoute.js");
@@ -44,8 +47,16 @@ app.use(require("connect-flash")());
 app.use(static);
 // Inventory routes
 app.use("/inv", inventoryRoute);
+app.use("/account", accountRoute);
+// Message routes
+app.use("/message", messageRoute);
 app.use("/ierror", intentionalErrorRoute);
 
+// Cookie parser
+app.use(cookieParser())
+
+// JWT checker
+app.use(utilities.checkJWTToken);
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file

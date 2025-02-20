@@ -66,6 +66,43 @@
   position: relative;
 }
 
+.input-box input, .input-box select, .input-box textarea, #classificationList {
+  padding: .5rem;
+  border: none;
+}
+.input-box input::placeholder, .input-box select::placeholder, .input-box textarea::placeholder {
+  color: rgba(0, 0, 0, 0.27)
+}
+.input-box input:invalid, .input-box textarea:invalid, .input-box select:invalid {
+  border-right: 5px solid red;
+}
+.input-box input[type="submit"] {
+  font-size: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  width: fit-content;
+  align-self: center;
+  background-color: rgb(170, 7, 7);
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: .5rem;
+  box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.368);
+}
+.input-box .reveal-button {
+  color: transparent; /* To make wave happy */
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  background-color: transparent;
+  background-image: url("/images/site/eye_open.svg");
+  background-size: contain;
+  height: 2rem;
+  width: 2rem;
+  border: 0;
+}
+.input-box .reveal-button.active {
+  background-image: url("/images/site/eye_closed.svg");
+}
 .fine-print {
   font-size: .75em;
 }
