@@ -208,53 +208,69 @@ async function buildUpdate(req, res, next) {
  *  Process account update post
  * *************************************** */
 async function updateAccount(req, res) {
-  let nav = await utilities.getNav();
-  const {
-    account_id,
-    account_firstname,
-    account_lastname,
-    account_email,
-    // account_password,
-  } = req.body;
+  try {
 
-  const regResult = await accountModel.updateAccount(
-    account_id,
-    account_firstname,
-    account_lastname,
-    account_email,
-  );
 
-  if (regResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you've updated ${account_firstname}.`
-    );
-
-    //Update the cookie accountData
-  
-
-    const accountData = await accountModel.getAccountById(account_id); // Get it from db so we can remake the cookie
-    delete accountData.account_password;
-    res.locals.accountData.account_firstname = accountData.account_firstname; // So it displays correctly
-    utilities.updateCookie(accountData, res); // Remake the cookie with new data
-
-    res.status(201).render("account/account-management", {
-      title: "Management",
-      errors: null,
-      nav,
-    });
-  } else {
-    req.flash("notice", "Sorry, the update failed.");
-    res.status(501).render("account/update", {
-      title: "Update",
-      errors: null,
+    let nav = await utilities.getNav();
+    
+    const {
       account_id,
       account_firstname,
       account_lastname,
       account_email,
-      nav,
-      messages: req.flash()
-    });
+    } = req.body;
+
+    const regResult = await accountModel.updateAccount(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    );
+
+
+
+    if (regResult.rowCount > 0) {
+      req.flash("notice", `Congratulations, you've updated ${account_firstname}.`);
+
+      // Fetch updated account data from DB
+      const accountData = await accountModel.getAccountById(account_id);
+
+      if (!accountData) {
+        throw new Error("Account data not found after update.");
+      }
+
+      delete accountData.account_password;
+
+    
+
+      // Ensure res.locals.accountData is set
+      res.locals.accountData = accountData; 
+
+      utilities.updateCookie(accountData, res); 
+
+      return res.status(201).render("account/account-management", {
+        title: "Management",
+        errors: null,
+        nav,
+        messages: req.flash(),
+      });
+    } else {
+    
+      req.flash("notice", "Sorry, the update failed.");
+      return res.status(501).render("account/update", {
+        title: "Update",
+        errors: null,
+        account_id,
+        account_firstname,
+        account_lastname,
+        account_email,
+        nav,
+        messages: req.flash(),
+      });
+    }
+  } catch (error) {
+    console.error("🚨 Error in updateAccount:", error.message);
+    res.status(500).send(`🔥 Error occurred: ${error.message}`);
   }
 }
 
@@ -263,46 +279,52 @@ async function updateAccount(req, res) {
  *  Process account password update post
  * *************************************** */
 async function updatePassword(req, res) {
-  let nav = await utilities.getNav();
-
-  const { account_id, account_password } = req.body;
-
-  // Hash the password before storing.
-  let hashedPassword;
   try {
-    // regular password and cost (salt is generated automatically)
-    hashedPassword = await bcrypt.hashSync(account_password, 10);
+
+    let nav = await utilities.getNav();
+
+    const { account_id, account_password } = req.body; // 🔹 Match form's `name` attribute
+
+    if (!account_password) {
+      throw new Error("account_password is undefined! Check the form's input name.");
+    }
+
+    const hashedPassword = await bcrypt.hash(account_password, 10);
+
+    const regResult = await accountModel.updatePassword(account_id, hashedPassword);
+
+    if (regResult.rowCount > 0) {
+      req.flash("notice", "Password successfully updated.");
+
+      const accountData = await accountModel.getAccountById(account_id);
+
+      if (!accountData) {
+        throw new Error("Account data not found after password update.");
+      }
+
+      delete accountData.account_password;
+
+      res.locals.accountData = accountData;
+      utilities.updateCookie(accountData, res);
+
+      return res.status(201).render("account/account-management", {
+        title: "Account Management",
+        errors: null,
+        nav,
+        messages: req.flash(),
+      });
+    } else {
+      req.flash("error", "Sorry, the password update failed.");
+      return res.status(501).render("account/update-password", {
+        title: "Update Password",
+        errors: null,
+        nav,
+        messages: req.flash(),
+      });
+    }
   } catch (error) {
-    req.flash(
-      "notice",
-      "Sorry, there was an error processing the password update."
-    );
-    res.status(500).render("account/update", {
-      title: "Update",
-      nav,
-      errors: null,
-    });
-  }
-
-  const regResult = await accountModel.updatePassword(account_id, hashedPassword);
-
-  if (regResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you've updated the password.`
-    );
-    res.status(201).render("account/account-management", {
-      title: "Manage",
-      errors: null,
-      nav,
-    });
-  } else {
-    req.flash("notice", "Sorry, the password update failed.");
-    res.status(501).render("account/update", {
-      title: "Update",
-      errors: null,
-      nav,
-    });
+    console.error("Error in updatePassword:", error.message);
+    res.status(500).send(`Error occurred: ${error.message}`);
   }
 }
 
