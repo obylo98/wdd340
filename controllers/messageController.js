@@ -134,14 +134,24 @@ async function buildCompose(req, res, next) {
  * @param {import('express').NextFunction} next
  */
 async function sendMessage(req, res, next) {
-  const result = await messageModel.sendMessage({
-    message_from: res.locals.accountData.account_id,
-    message_to: req.body.message_to,
-    message_subject: req.body.message_subject,
-    message_body: req.body.message_body,
-  });
+  try {
+    const { message_to, message_subject, message_body } = req.body;
+    const sender_id = res.locals.accountData.account_id;
 
-  res.redirect("/message");
+    await messageModel.sendMessage(
+      message_to,
+      message_subject, 
+      message_body,
+      sender_id
+    );
+
+    req.flash("notice", "Message sent successfully!");
+    res.redirect("/message");
+  } catch (error) {
+    console.error("Send message error:", error);
+    req.flash("notice", "Error sending message");
+    res.redirect("/message/compose");
+  }
 }
 
 /**

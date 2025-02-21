@@ -149,6 +149,38 @@ async function getMessagesToId(account_id) {
   }
 }
 
+/* ***************************
+ * Send a new message
+ * ************************** */
+async function sendMessage(
+  recipient_id,
+  subject,
+  message_text,
+  sender_id,
+  created_at
+) {
+  try {
+    const sql = `
+      INSERT INTO messages 
+        (recipient_id, subject, message_text, sender_id, created_at) 
+      VALUES 
+        ($1, $2, $3, $4, $5)
+      RETURNING *
+    `;
+    const result = await pool.query(sql, [
+      recipient_id,
+      subject,
+      message_text,
+      sender_id,
+      created_at,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error in sendMessage:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   registerAccount,
   checkExistingEmail,
@@ -159,4 +191,5 @@ module.exports = {
   getAccountList,
   getMessageCountById,
   getMessagesToId,
+  sendMessage,
 };
