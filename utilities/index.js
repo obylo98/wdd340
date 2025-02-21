@@ -1,5 +1,7 @@
 const invModel = require("../models/inventory-model");
 const Util = {};
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -168,23 +170,30 @@ Util.handleErrors = (fn) => (req, res, next) =>
  * Middleware to check token validity
  **************************************** */
 Util.checkJWTToken = (req, res, next) => {
-  if (req.cookies.jwt) {
-    jwt.verify(
-      req.cookies.jwt,
-      process.env.ACCESS_TOKEN_SECRET,
-      function (err, accountData) {
-        if (err) {
-          req.flash("Please log in");
-          res.clearCookie("jwt");
-          return res.redirect("/account/login");
-        }
-        res.locals.accountData = accountData;
-        res.locals.loggedin = 1;
-        next();
-      }
-    );
-  } else {
+  console.log("📌 Running checkJWTToken...");
+  
+  const token = req.cookies.jwt;
+  console.log("📌 JWT from request cookies:", token);
+
+  if (!token) {
+    console.log("❌ No JWT token found. Redirecting to login.");
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+
+  try {
+    const accountData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log("✅ Token verified. User:", accountData);
+
+    res.locals.accountData = accountData;
+    res.locals.loggedin = true;
+
     next();
+  } catch (error) {
+    console.log("❌ Invalid token. Redirecting to login.");
+    req.flash("notice", "Session expired. Please log in again.");
+    res.clearCookie("jwt");
+    return res.redirect("/account/login");
   }
 };
 
@@ -193,17 +202,38 @@ Util.checkJWTToken = (req, res, next) => {
  */
 
 Util.updateCookie = (accountData, res) => {
-  const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 3600,
-  });
-  if (process.env.NODE_ENV === "development") {
-    res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
-  } else {
-    res.cookie("jwt", accessToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 3600 * 1000,
+  try {
+    console.log("📌 Running updateCookie()...");
+
+    if (!process.env.ACCESS_TOKEN_SECRET) {
+      throw new Error("Missing ACCESS_TOKEN_SECRET in environment variables.");
+    }
+
+    const token = jwt.sign(
+      {
+        account_id: accountData.account_id,
+        account_firstname: accountData.account_firstname,
+        account_lastname: accountData.account_lastname,
+        account_email: accountData.account_email,
+        account_type: accountData.account_type,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    console.log("✅ Token generated:", token);
+
+    // Set cookie with correct settings
+    res.cookie("jwt", token, {
+      httpOnly: true, // Prevents JavaScript access
+      secure: process.env.NODE_ENV !== "development", // Secure in production
+      sameSite: "strict", // Helps prevent CSRF attacks
+      maxAge: 3600000, // 1 hour
     });
+
+    console.log("✅ Token stored in cookie.");
+  } catch (error) {
+    console.error("🚨 Error in updateCookie:", error.message);
   }
 };
 
@@ -211,10 +241,29 @@ Util.updateCookie = (accountData, res) => {
  *  Check Login
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
-  if (res.locals.loggedin) {
-    next();
-  } else {
+  console.log("📌 Running checkLogin...");
+
+  const token = req.cookies.jwt;
+  console.log("📌 JWT from request cookies:", token);
+
+  if (!token) {
+    console.log("❌ No JWT token found. Redirecting to login.");
     req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+
+  try {
+    const accountData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log("✅ Token verified. User:", accountData);
+
+    res.locals.accountData = accountData;
+    res.locals.loggedin = true;
+
+    next();
+  } catch (error) {
+    console.log("❌ Invalid token. Redirecting to login.");
+    req.flash("notice", "Session expired. Please log in again.");
+    res.clearCookie("jwt");
     return res.redirect("/account/login");
   }
 };

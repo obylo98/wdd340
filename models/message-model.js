@@ -106,4 +106,15 @@ async function getAccountList() {
   }
 }
 
-module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountById, updateAccount, updatePassword,getAccountList };
+async function getMessageCountById(account_id) {
+    try {
+      const sql = `SELECT COUNT(*) AS count FROM messages WHERE recipient_id = $1`;
+      const result = await pool.query(sql, [account_id]);
+      return result.rows[0].count; 
+    } catch (error) {
+      console.error("Database error in getMessageCountById:", error.message);
+      return 0; // Return 0 messages if there's an error
+    }
+  }
+
+module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountById, updateAccount, updatePassword,getAccountList, getMessageCountById };

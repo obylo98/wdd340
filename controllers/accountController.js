@@ -102,53 +102,73 @@ async function buildLogin(req, res, next) {
  *  Process login post request
  * ************************************ */
 async function accountLogin(req, res) {
-  let nav = await utilities.getNav();
-  const { account_email, account_password } = req.body;
-  const accountData = await accountModel.getAccountByEmail(account_email);
-  if (!accountData) {
-    req.flash("notice", "Please check your credentials and try again.");
-    res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    });
-    return;
-  }
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
-      delete accountData.account_password;
-      
-      utilities.updateCookie(accountData, res);
-     
-      return res.redirect("/account/");
-    } // Need to have a wrong password option
-    else {
-      req.flash("notice", "Please check your credentials and try again."); // Login was hanging with bad password but correct id
-      res.redirect("/account/");
+    
+    let nav = await utilities.getNav();
+    const { account_email, account_password } = req.body;
+
+    // Fetch account details from DB
+    const accountData = await accountModel.getAccountByEmail(account_email);
+
+    if (!accountData) {
+      req.flash("notice", "Invalid email or password.");
+      return res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+        messages: req.flash(),
+      });
     }
+
+    // Check password
+    const passwordMatch = await bcrypt.compare(account_password, accountData.account_password);
+    if (!passwordMatch) {
+      req.flash("notice", "Invalid email or password.");
+      return res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+        messages: req.flash(),
+      });
+    }
+
+    // Store user data in session or generate JWT token
+    delete accountData.account_password;
+    
+    utilities.updateCookie(accountData, res);
+    
+    
+    return res.redirect("/account/");
   } catch (error) {
-    return new Error("Access Forbidden");
+    console.error("Full Error in accountLogin:", error);
+    res.status(500).send(`Error occurred: ${error.message}`);
   }
 }
 
 /**
  * Process account management get request
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function buildAccountManagementView(req, res) {
-  let nav = await utilities.getNav();
-  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
+  try {
 
-  res.render("account/account-management", {
-    title: "Account Management",
-    nav,
-    errors: null,
-    unread, 
-  });
-  return; 
+    let nav = await utilities.getNav();
+    console.log("Navigation loaded successfully");
+
+    const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
+
+    res.render("account/account-management", {
+      title: "Account Management",
+      nav,
+      errors: null,
+      unread,
+      messages: req.flash() 
+    });
+  } catch (error) {
+    console.error(" Error in buildAccountManagementView:", error.message);
+    res.status(500).send(`Error occurred: ${error.message}`);
+  }
 }
 
 /* ****************************************

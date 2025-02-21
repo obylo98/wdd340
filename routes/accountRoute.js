@@ -34,7 +34,7 @@ router.post(
 router.get("/update/:accountId", utilities.handleErrors(accountController.buildUpdate));
 router.post(
   "/update",
-  regValidate.updateRules(), // TODO: This needs to have a separate rule set, without existing email check..unless...oh complex
+  regValidate.updateRules(), 
   regValidate.checkUpdateData,
   utilities.handleErrors(accountController.updateAccount)
   );

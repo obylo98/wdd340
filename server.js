@@ -20,6 +20,9 @@ const intentionalErrorRoute = require("./routes/intentionalErrorRoute.js");
 const utilities = require("./utilities");
 const pool = require("./database");
 
+// Cookie parser
+app.use(cookieParser())
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -52,8 +55,7 @@ app.use("/account", accountRoute);
 app.use("/message", messageRoute);
 app.use("/ierror", intentionalErrorRoute);
 
-// Cookie parser
-app.use(cookieParser())
+
 
 // JWT checker
 app.use(utilities.checkJWTToken);
