@@ -122,6 +122,8 @@ async function buildCompose(req, res, next) {
     nav,
     errors: null,
     recipientList,
+    messages: req.flash(),
+  
   });
 }
 
