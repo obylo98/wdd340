@@ -1,12 +1,7 @@
 <h1><%- title %></h1>
-<%- messages() %>
-<% if (errors) { %>
-<ul class="notice">
-    <% errors.array().forEach(error => { %>
-    <li><%= error.msg %></li>
-    <%  }) %>
-</ul>
-<% } %>
+<% if (messages && messages.notice) { %>
+    <div class="notice"><%= messages.notice %></div>
+  <% } %>
 
 <ul>
     <li>

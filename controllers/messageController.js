@@ -32,6 +32,7 @@ async function buildInbox(req, res, next) {
     inboxTable,
     archived: false,
     archivedMessages,
+    messages: req.flash(),
   });
 }
 
