@@ -32,7 +32,7 @@ router.post("/add-inventory", invValidate.inventoryRules(), invValidate.checkInv
 router.get("/edit/:inventoryId", utilities.handleErrors(invController.buildEditInventory));
 router.post("/update/", invValidate.inventoryRules(), invValidate.checkUpdateData, utilities.handleErrors(invController.updateInventory));
 
-// Delete vehicle information routes
+
 router.get("/delete/:inventoryId", utilities.handleErrors(invController.buildDeleteInventory));
 router.post("/delete/", utilities.handleErrors(invController.deleteInventory));  // Don't need validation
 

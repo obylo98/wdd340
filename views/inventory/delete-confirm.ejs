@@ -1,12 +1,7 @@
 <h1><%- title %></h1>
-<%- messages() %> <%# WK4 TSK2.4 %>
-<% if (errors) { %>
-    <ul class="notice">
-   <% errors.array().forEach(error => { %>
-     <li><%= error.msg %></li>
-  <%  }) %>
-   </ul>
-  <% } %>
+<% if (messages && messages.notice) { %>
+  <div class="notice"><%= messages.notice %></div>
+<% } %>
 
   <form class="input-box" id="updateForm" action="/inv/delete" method="post">
     <label>Make<input type="text" value="<%- locals.inv_make %>" placeholder="Ford" name="inv_make" minlength="2" maxlength="50" readonly></label>
