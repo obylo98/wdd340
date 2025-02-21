@@ -1,12 +1,7 @@
 <h1><%- title %></h1>
-<%- messages() %>
-<% if (errors) { %>
-    <ul class="notice">
-   <% errors.array().forEach(error => { %>
-     <li><%= error.msg %></li>
-  <%  }) %>
-   </ul>
-  <% } %>
+<% if (messages.notice) { %>
+    <div class="notice"><%= messages.notice %></div>
+<% } %>
 
 <form class="input-box" action="/account/update" method="post">
     <label>First name<input type="text" name="account_firstname" required autocomplete="given-name" value="<%= locals.account_firstname %>"></label>

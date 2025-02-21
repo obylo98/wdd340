@@ -199,7 +199,8 @@ async function buildUpdate(req, res, next) {
     account_id,
     account_firstname,
     account_lastname,
-    account_email
+    account_email,
+    messages: req.flash()
   });
 }
 
@@ -252,6 +253,7 @@ async function updateAccount(req, res) {
       account_lastname,
       account_email,
       nav,
+      messages: req.flash()
     });
   }
 }
