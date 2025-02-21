@@ -61,6 +61,7 @@ async function buildArchive(req, res, next) {
     inboxTable,
     archived: true,
     unarchivedMessages,
+    messages: req.flash(),
   });
 }
 
@@ -123,15 +124,11 @@ async function buildCompose(req, res, next) {
     errors: null,
     recipientList,
     messages: req.flash(),
-  
   });
 }
 
 /**
  * Process send message post
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function sendMessage(req, res, next) {
   try {
@@ -140,7 +137,7 @@ async function sendMessage(req, res, next) {
 
     await messageModel.sendMessage(
       message_to,
-      message_subject, 
+      message_subject,
       message_body,
       sender_id
     );
@@ -156,9 +153,6 @@ async function sendMessage(req, res, next) {
 
 /**
  * Deliver delete confirmation view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function buildDelete(req, res, next) {
   let nav = await utilities.getNav();
@@ -174,9 +168,7 @@ async function buildDelete(req, res, next) {
 
 /**
  * Process delete post
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
+
  */
 async function deleteMessage(req, res, next) {
   messageModel.deleteMessage(req.body.message_id);
@@ -186,9 +178,6 @@ async function deleteMessage(req, res, next) {
 
 /**
  * Toggle a messages read flag
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function toggleRead(req, res, next) {
   const message_read = await messageModel.toggleRead(req.params.messageId); // Returns the new value of message_read
@@ -197,9 +186,6 @@ async function toggleRead(req, res, next) {
 
 /**
  *  Toggle a messages archived flag
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function toggleArchived(req, res, next) {
   const message_read = await messageModel.toggleArchived(req.params.messageId); // Returns the new value of message_read
