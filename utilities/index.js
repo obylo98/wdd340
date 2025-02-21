@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
+
   let data = await invModel.getClassifications();
   let list = "<ul>";
   list += '<li><a href="/" title="Home page">Home</a></li>';
@@ -170,30 +171,28 @@ Util.handleErrors = (fn) => (req, res, next) =>
  * Middleware to check token validity
  **************************************** */
 Util.checkJWTToken = (req, res, next) => {
-  console.log("📌 Running checkJWTToken...");
   
+
   const token = req.cookies.jwt;
-  console.log("📌 JWT from request cookies:", token);
+  
 
   if (!token) {
-    console.log("❌ No JWT token found. Redirecting to login.");
-    req.flash("notice", "Please log in.");
-    return res.redirect("/account/login");
+    res.locals.loggedin = false;
+    return next(); 
   }
 
   try {
     const accountData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    console.log("✅ Token verified. User:", accountData);
+
 
     res.locals.accountData = accountData;
     res.locals.loggedin = true;
 
     next();
   } catch (error) {
-    console.log("❌ Invalid token. Redirecting to login.");
-    req.flash("notice", "Session expired. Please log in again.");
     res.clearCookie("jwt");
-    return res.redirect("/account/login");
+    res.locals.loggedin = false;
+    next(); 
   }
 };
 
@@ -203,7 +202,7 @@ Util.checkJWTToken = (req, res, next) => {
 
 Util.updateCookie = (accountData, res) => {
   try {
-    console.log("📌 Running updateCookie()...");
+
 
     if (!process.env.ACCESS_TOKEN_SECRET) {
       throw new Error("Missing ACCESS_TOKEN_SECRET in environment variables.");
@@ -221,19 +220,16 @@ Util.updateCookie = (accountData, res) => {
       { expiresIn: "1h" }
     );
 
-    console.log("✅ Token generated:", token);
 
-    // Set cookie with correct settings
     res.cookie("jwt", token, {
-      httpOnly: true, // Prevents JavaScript access
-      secure: process.env.NODE_ENV !== "development", // Secure in production
-      sameSite: "strict", // Helps prevent CSRF attacks
+      httpOnly: true, // Prevents client-side JavaScript from accessing it
+      secure: false,  // Change to true if using HTTPS
+      sameSite: "lax", // Allows navigation without clearing the cookie
       maxAge: 3600000, // 1 hour
     });
 
-    console.log("✅ Token stored in cookie.");
   } catch (error) {
-    console.error("🚨 Error in updateCookie:", error.message);
+    console.error("Error in updateCookie:", error.message);
   }
 };
 
@@ -241,27 +237,26 @@ Util.updateCookie = (accountData, res) => {
  *  Check Login
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
-  console.log("📌 Running checkLogin...");
 
   const token = req.cookies.jwt;
-  console.log("📌 JWT from request cookies:", token);
+
 
   if (!token) {
-    console.log("❌ No JWT token found. Redirecting to login.");
+
     req.flash("notice", "Please log in.");
     return res.redirect("/account/login");
   }
 
   try {
     const accountData = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    console.log("✅ Token verified. User:", accountData);
+  
 
     res.locals.accountData = accountData;
     res.locals.loggedin = true;
 
     next();
   } catch (error) {
-    console.log("❌ Invalid token. Redirecting to login.");
+    
     req.flash("notice", "Session expired. Please log in again.");
     res.clearCookie("jwt");
     return res.redirect("/account/login");

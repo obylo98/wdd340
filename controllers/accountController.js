@@ -269,8 +269,8 @@ async function updateAccount(req, res) {
       });
     }
   } catch (error) {
-    console.error("🚨 Error in updateAccount:", error.message);
-    res.status(500).send(`🔥 Error occurred: ${error.message}`);
+    console.error(" Error in updateAccount:", error.message);
+    res.status(500).send(` Error occurred: ${error.message}`);
   }
 }
 
@@ -283,7 +283,7 @@ async function updatePassword(req, res) {
 
     let nav = await utilities.getNav();
 
-    const { account_id, account_password } = req.body; // 🔹 Match form's `name` attribute
+    const { account_id, account_password } = req.body; 
 
     if (!account_password) {
       throw new Error("account_password is undefined! Check the form's input name.");

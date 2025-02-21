@@ -8,6 +8,11 @@ const regValidate = require("../utilities/account-validation");
 
 
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView));
+// Protected Routes (Require authentication)
+router.get("/management", utilities.checkJWTToken, utilities.handleErrors(accountController.buildAccountManagementView));
+router.get("/update", utilities.checkJWTToken, utilities.handleErrors(accountController.buildUpdateAccountView));
+router.post("/update", utilities.checkJWTToken, utilities.handleErrors(accountController.updateAccount));
+router.post("/update-password", utilities.checkJWTToken, utilities.handleErrors(accountController.updatePassword));
 
 // Route to build account view
 router.get("/login", utilities.handleErrors(accountController.buildLogin));
