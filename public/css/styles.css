@@ -589,3 +589,120 @@ div.error-display img {
 .compose-form input[type="submit"]:hover {
   background: #0052a3;
 }
+
+/* Auth Forms Styling */
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h1 {
+  color: #03045e;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.auth-container .input-box {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.auth-container .input-box label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.auth-container .input-box input {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  padding: 0.8rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-container .input-box input:focus {
+  border-color: #03045e;
+  box-shadow: 0 0 0 3px rgba(3, 4, 94, 0.1);
+  outline: none;
+}
+
+.auth-container .input-box input[type="submit"] {
+  background: #03045e;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.auth-container .input-box input[type="submit"]:hover {
+  background: #020336;
+}
+
+.auth-container .notice {
+  padding: 1rem;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Success message style */
+.auth-container .notice:not(.error) {
+  background: #e3f2fd;
+  color: #0d47a1;
+  border-left: 4px solid #2196f3;
+}
+
+/* Error message style */
+.auth-container .notice.error {
+  background: #ffe3e3;
+  color: #c92a2a;
+  border-left: 4px solid #fa5252;
+}
+
+.auth-container .fine-print {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.auth-container .reveal-button {
+  right: 10px !important;
+  bottom: 10px !important;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.auth-container .reveal-button:hover {
+  opacity: 1;
+}
+
+.auth-container .signup-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+}
+
+.auth-container .signup-link a {
+  color: #03045e;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-container .signup-link a:hover {
+  text-decoration: underline;
+}

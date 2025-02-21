@@ -67,9 +67,6 @@ async function buildArchive(req, res, next) {
 
 /**
  * Deliver message view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function buildMessageView(req, res, next) {
   const messageId = req.params.messageId;
@@ -91,9 +88,6 @@ async function buildMessageView(req, res, next) {
 
 /**
  * Deliver compose view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
 async function buildCompose(req, res, next) {
   const nav = await utilities.getNav();
@@ -163,6 +157,7 @@ async function buildDelete(req, res, next) {
     nav,
     errors: null,
     messageData,
+    messages: req.flash(),
   });
 }
 
