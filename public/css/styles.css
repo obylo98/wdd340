@@ -706,3 +706,144 @@ div.error-display img {
 .auth-container .signup-link a:hover {
   text-decoration: underline;
 }
+
+/* Account Management Styles */
+.account-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.account-container h1 {
+  color: #03045e;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.account-container h2 {
+  color: #333;
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.account-container h3 {
+  color: #666;
+  font-size: 1.2rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.account-container .section {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.account-container a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.account-container a:hover {
+  color: #003d7a;
+  text-decoration: underline;
+}
+
+.account-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.account-container ul li {
+  margin-bottom: 1rem;
+}
+
+.message-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #e3f2fd;
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+.message-stats p {
+  margin: 0;
+  color: #0d47a1;
+}
+
+/* Update Form Styles */
+.update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.update-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  position: relative;
+}
+
+.update-form input[type="text"],
+.update-form input[type="email"],
+.update-form input[type="password"] {
+  padding: 0.8rem;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.update-form input:focus {
+  border-color: #03045e;
+  box-shadow: 0 0 0 3px rgba(3, 4, 94, 0.1);
+  outline: none;
+}
+
+.update-form input[type="submit"] {
+  background: #03045e;
+  color: white;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.update-form input[type="submit"]:hover {
+  background: #020336;
+}
+
+.update-form .fine-print {
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: -0.5rem;
+}
+
+.update-form .reveal-button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.update-form .reveal-button:hover {
+  opacity: 1;
+}

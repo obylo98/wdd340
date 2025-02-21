@@ -1,27 +1,37 @@
-<h1><%- title %></h1>
-<% if (messages.notice) { %>
-  <div class="notice"><%= messages.notice %></div>
-<% } %>
+<div class="account-container">
+  <h1><%- title %></h1>
+  <% if (messages.notice) { %>
+    <div class="notice <%= messages.notice.includes('error') ? 'error' : '' %>">
+      <%= messages.notice %>
+    </div>
+    <% } %>
 
-  <% if(locals.accountData.account_type == "Client") { %>
-    <h2>Welcome <%- locals.accountData.account_firstname %></h2>
-    <p><a href="/account/update/<%- locals.accountData.account_id %>">Update account information</a></p>
-  <% } else if(locals.accountData.account_type == "Employee" || locals.accountData.account_type == "Admin") { %>
-    <h2>Welcome <%- locals.accountData.account_firstname %> </h2>
-    <p><a href="/account/update/<%- locals.accountData.account_id %>">Update account information</a></p>
-    <h3>Inventory Management</h3>
-    <p><a href="/inv/">Manage Inventory</a></p>
-  <% } %>
+      <% if(locals.accountData.account_type=="Client" ) { %>
+        <div class="section">
+          <h2>Welcome <%- locals.accountData.account_firstname %></h2>
+          <p><a href="/account/update/<%- locals.accountData.account_id %>">Update account information</a></p>
+        </div>
+        <% } else if(locals.accountData.account_type=="Employee" || locals.accountData.account_type=="Admin" ) { %>
+          <div class="section">
+            <h2>Welcome <%- locals.accountData.account_firstname %></h2>
+            <p><a href="/account/update/<%- locals.accountData.account_id %>">Update account information</a></p>
+          </div>
 
-  <% if(locals.loggedin) { %>
-    <h2>Messaging Center</h2>
-    <ul>
-      <li><p>You have <%- unread %> new messages</p></li>
-      <li><p>Go to <a href="/message">inbox</a></p></li>
-    </ul>
+          <div class="section">
+            <h3>Inventory Management</h3>
+            <p><a href="/inv/">Manage Inventory</a></p>
+          </div>
+          <% } %>
 
-  
-  
-  <% } %>
-  
-  <h3>You're logged in</h3>
+            <% if(locals.loggedin) { %>
+              <div class="section">
+                <h2>Messaging Center</h2>
+                <div class="message-stats">
+                  <p>You have <%- unread %> new messages</p>
+                  <a href="/message">Go to inbox</a>
+                </div>
+              </div>
+              <% } %>
+</div>
+
+<h3>You're logged in</h3>

@@ -1,33 +1,54 @@
-<h1><%- title %></h1>
-<% if (messages.notice) { %>
-    <div class="notice"><%= messages.notice %></div>
-<% } %>
+<div class="account-container">
+    <h1><%- title %></h1>
+    <% if (messages.notice) { %>
+        <div class="notice <%= messages.notice.includes('error') ? 'error' : '' %>">
+            <%= messages.notice %>
+        </div>
+        <% } %>
 
-<form class="input-box" action="/account/update" method="post">
-    <label>First name<input type="text" name="account_firstname" required autocomplete="given-name" value="<%= locals.account_firstname %>"></label>
-    <label>Last name<input type="text" name="account_lastname" required autocomplete="family-name" value="<%= locals.account_lastname %>"></label>
-    <label>Email address<input type="email" name="account_email" required autocomplete="email" value="<%= locals.account_email %>"></label>
-    
-    <input type="submit" value="UPDATE">
-    <input type="hidden" name="account_id" value="<%= locals.account_id %>">
-    <input type="hidden" name="old_email" value="<%= locals.account_email %>"> <%# To exclude from existing email search %>
-</form>
+            <div class="section">
+                <h2>Update Account Information</h2>
+                <form class="update-form" action="/account/update" method="post">
+                    <label>First name
+                        <input type="text" name="account_firstname" required autocomplete="given-name"
+                            value="<%= locals.account_firstname %>">
+                    </label>
+                    <label>Last name
+                        <input type="text" name="account_lastname" required autocomplete="family-name"
+                            value="<%= locals.account_lastname %>">
+                    </label>
+                    <label>Email address
+                        <input type="email" name="account_email" required autocomplete="email"
+                            value="<%= locals.account_email %>">
+                    </label>
 
-<form class="input-box" action="/account/update-password" method="post">
-    <label>Password<input type="password" name="account_password" id="password" required autocomplete="new-password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$"><span class="reveal-button active" id="passwordHide">hide password</span></label>
-    <span class="fine-print">Password must be 12 characters or longer, contain 1 capital letter, 1 number and 1 special character. This will change your current password.</span>
-    <input type="submit" value="CHANGE PASSWORD">
-    <input type="hidden" name="account_id" value="<%= locals.account_id %>">
-</form>
+                    <input type="submit" value="Update Information">
+                    <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+                    <input type="hidden" name="old_email" value="<%= locals.account_email %>">
+                </form>
+            </div>
 
+            <div class="section">
+                <h2>Change Password</h2>
+                <form class="update-form" action="/account/update-password" method="post">
+                    <label>New Password
+                        <input type="password" name="account_password" id="password" required
+                            autocomplete="new-password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$">
+                        <span class="reveal-button active" id="passwordHide">hide password</span>
+                    </label>
+                    <span class="fine-print">Password must be 12 characters or longer, contain 1 capital letter, 1
+                        number and 1 special character.</span>
+                    <input type="submit" value="Change Password">
+                    <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+                </form>
+            </div>
+</div>
 
-
-<!-- Script to handle hiding and revealing password field -->
 <script>
     const passwordInput = document.querySelector("#password");
     const passwordHide = document.querySelector("#passwordHide");
     passwordHide.addEventListener("click", () => {
-        if(passwordInput.getAttribute("type") == "password" ) {
+        if (passwordInput.getAttribute("type") == "password") {
             passwordInput.setAttribute("type", "text");
             passwordHide.classList.remove("active");
         }
